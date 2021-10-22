@@ -10,7 +10,13 @@ function return_data($flag,$msg,$data){
 function cacheKey($key){
     return 'db/game_cache_' . md5($key);
 }
+function autoMkdir(){
+    if(!is_dir("db")){
+        mkdir("db",0777,true);
+    }
+}
 function cacheSet($key,$obj){
+    autoMkdir();
     file_put_contents(cacheKey($key),json_encode($obj));
 }
 function cacheGet($key){
@@ -102,6 +108,7 @@ function userJinDuTextGet($fileId){
 }
 function userJinDuTextSet($fileId,$txt){
     $key = "user_jindu_file_".$fileId;
+    autoMkdir();
     file_put_contents(cacheKey($key),$txt);
 }
 function userJinDuTextDel($fileId){
