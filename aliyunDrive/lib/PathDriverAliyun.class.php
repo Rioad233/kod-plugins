@@ -42,6 +42,7 @@ class PathDriverAliyun extends PathDriverBase {
 	 * @return void
 	 */
 	 public function logOut($text){
+         return;
          $myfile = fopen("log.txt", "a");
          fwrite($myfile, date('Y-m-d H:i:s').$text."\n\n");
          fclose($myfile);

@@ -8,7 +8,7 @@ class aliyunDrivePlugin extends PluginBase{
 	function __construct(){
 		parent::__construct();
 	}
-	
+
 	public function regist(){
 		$this->hookRegist(array(
 			'globalRequest'					=> 'aliyunDrivePlugin.autoRun',
@@ -26,6 +26,7 @@ class aliyunDrivePlugin extends PluginBase{
 		$this->echoFile('static/main.js');
 	}
 	public function logOut($text){
+	    return;
         $myfile = fopen("log.txt", "a");
         fwrite($myfile, date('Y-m-d H:i:s').$text."\n\n");
         fclose($myfile);
