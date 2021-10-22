@@ -12,5 +12,5 @@ do {
 fclose ($handle);
 $source = "./asserts/js/init.js";
 $target = $webHost."/asserts/js/init.js";
-echo str_replace($source,$target,$contents);
 echo "<script src='./ext.js'></script>";
+echo str_replace($source,$target,$contents);
