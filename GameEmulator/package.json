@@ -1,0 +1,42 @@
+{
+	"id":"GameEmulator",
+	"name":"游戏模拟器",
+	"title":"全能模拟,支持街机",
+	"version":"1.0",
+    "source":{
+		"icon":"{{pluginHost}}static/image/icon.png",
+		"screenshoot":[
+			"{{pluginHost}}static/image/game1.png",
+			"{{pluginHost}}static/image/game2.png",
+			"{{pluginHost}}static/image/game3.png",
+			"{{pluginHost}}static/image/game4.png"
+		]
+	},
+    "category":"media,file",
+    "description":"<p>万能游戏模拟器支持24种游戏类型</p><p>1.红白机/磁碟机(NES):任天堂1983年发行的第一代游戏机,主流格式为nes,fds,unif,unf</p><p>2.超级任天堂(SNES):任天堂1990年发售的家用游戏机,主流格式为smc,fig,sfc,gd3,gd7,dx2,bsx,swc</p><p>3.Game Boy(GB):任天堂1989年发售的第一代便携式游戏机</p><p>4.Game Boy Advance(GBA):任天堂2001年发售的第二代便携式游戏机</p><p>5.Virtual Boy(VB):任天堂1995年发售的掌机</p><p>6.任天堂64(N64):任天堂1996年发售的第三代家用游戏机</p><p>7.任天堂DS(NDS):任天堂2004年发售的第三代便携式游戏机</p><p>8.Sega Master System(SMS):世嘉1985年发售的8位元家用游戏机</p><p>9.世嘉掌机(GG):世嘉1990年推出的第一款掌机</p><p>10.Sega Mega Drive(MD):世嘉1988年推出的16位元家用游戏机</p><p>11.Sega 32X(32X):世嘉1994年推出的一款拓展延伸机能的外设,32位元</p><p>12.世嘉土星(SS):世嘉1994年发售的第六代32位元家用游戏机</p><p>13.Sega CD(MD-CD):世嘉第五代家用游戏机的CD版</p><p>14.雅达利2600(Atari 2600):雅达利1977年发行的一款游戏机</p><p>15.雅达利7800(Atari 7800):雅达利1984年发售的游戏机</p><p>16.Atari Lynx:雅达利1989年发布的手提式游戏机</p><p>17.雅达利猛虎:雅达利1993年发售的游戏平台</p><p>18.神奇天鹅(WSC):万代公司2001年推出的掌机</p><p>19.个人电脑(MSX):美国微软1983年推出的8位和16位主机</p><p>20.Neo Geo Pocket:SNK1998年发售的第一款便携式游戏机</p><p>21.PC Engine(TurboGrafx-16):NEC1987年发售的游戏机</p><p>22.3DO:多家公司联合于1992年推出的游戏主机</p><p>23.PlayStation:索尼1994年发布的电子游戏机,主流格式为bin,cue,img,mdf,pbp,toc,cbn,m3u,ccd</p><p>24.Arcade(街机):置于公共娱乐场所的经营性专用游戏机</p>",
+	"meta":{
+		"needNetwork": 1
+	},
+	"keywords":"nes,fc,模拟器,游戏,街机",
+	"auther":{
+		"copyright":"FANSHENG",
+		"homePage":"https://gitee.com/fs185085781/kod-plugins"
+	},
+	"configItem":{
+	    "formStyle": {
+			"className": "form-box-title-left"
+		},
+		"fileExt":{
+			"type":"tags",
+			"display":"{{LNG['admin.plugin.fileExt']}}",
+			"desc":"{{LNG['admin.plugin.fileExtDesc']}}",
+			"value":"fds,nes,unif,unf,smc,fig,sfc,gd3,gd7,dx2,bsx,swc,zip,bin,cue,img,mdf,pbp,toc,cbn,m3u,ccd"
+		},
+		"fileSort":{
+			"type":"number",
+			"display":"{{LNG['admin.plugin.fileSort']}}",
+			"desc":"{{LNG['admin.plugin.fileSortDesc']}}",
+			"value":10
+		}
+	}
+}

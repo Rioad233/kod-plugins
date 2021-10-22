@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>模拟器跳转中...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  </head>
+  <body>
+  </body>
+  <script>
+    let path = '<?php echo @$_GET["path"];?>';
+    let ext = '<?php echo @$_GET["ext"];?>';
+    let name = '<?php echo @$_GET["name"];?>';
+    function path2url(){
+      return window.location.origin+window.location.pathname+"?explorer/index/fileOut&path="+path;
+    }
+    window.location.href = "<?php echo $this->pluginHost;?>static/mgame.php?url="+encodeURIComponent(path2url()+"#/"+name)+"&fext="+ext;
+  </script>
+</html>
