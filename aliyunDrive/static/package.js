@@ -30,7 +30,7 @@ define(function(require, exports) {
         },
         "tishi": {
             "type":"input",
-            "value":"javascript:void((function(){alert(\"refresh_token:\"+JSON.parse(localStorage.getItem(\"token\")).refresh_token)})())",
+            "value":"javascript:void((function(){prompt(\"请将如下值复制到插件refresh_token属性中:\",JSON.parse(localStorage.getItem(\"token\")).refresh_token)})())",
             "desc":"将此代码复制到阿里云盘地址栏'粘贴并访问'即可获取",
             "display": "提示"
         }
