@@ -71,9 +71,7 @@ class aliyunDrivePlugin extends PluginBase{
 		foreach($valids as $name) {
 			if(empty($config[$name])) show_json('refresh_token设置有误，请尝试重新设置', false);
 		}
-		$config['name'] = $data['name'];	// 存储中触发刷新token时，name作为查找条件
-		// $config['ioUploadServer']	= 1;
-		// $config['ioFileOutServer']	= 1;
+		$config['name'] = $data['name'];
 
 		// 新增
 		if(!$data['id']) return $this->addStore($data, $config);
