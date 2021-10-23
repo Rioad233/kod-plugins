@@ -16,7 +16,7 @@ if($_GET["type"] == "1"){
     //获取用户当前游戏进度列表 {openId:"",game:""}
     $list = array();
     $tmp = userJinDuListGet($data["user_id"],$data["game"]);
-    if(!$tmp){
+    if($tmp){
         foreach($tmp as $item){
             array_push($list,$item);
         }
@@ -34,18 +34,24 @@ if($_GET["type"] == "1"){
         $jindu = array();
     }
     $id = md5(time()."-".rand(1000,9999));
-    $jindu[$id] = array(
+    $item = array(
         "id"=>$id,
         "user_id"=>$data["user_id"],
         "game"=>$data["game"],
         "name"=>$data["name"],
         "file_id"=>$data["fileId"],
     );
+    $jindu[$id] = $item;
     userJinDuListSet($data["user_id"],$data['game'],$jindu);
+    userJinDuOneSet($item);
      echo return_data(true,"进度保存成功","");
 }else if($_GET["type"] == "4"){
      //进度删除 {id:"",fileId:""}
     $item = userJinDuOneGet($data["id"]);
+    if(!$item){
+        echo return_data(false,"当前进度不存在","");
+        return;
+    }
     userJinDuTextDel($item["file_id"]);
     $tmp = userJinDuListGet($item["user_id"],$item['game']);
     $jindu = array();
