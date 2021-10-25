@@ -8,12 +8,23 @@
   <body>
   </body>
   <script>
+    function getCookie(key){
+      var arr = document.cookie.match(new RegExp("(^| )"+key+"=([^;]*)(;|$)"));
+      if(arr != null){
+        return unescape(arr[2]);
+      }else{
+        return null;
+      }
+    }
     let path = '<?php echo @$_GET["path"];?>';
     let ext = '<?php echo @$_GET["ext"];?>';
     let name = '<?php echo @$_GET["name"];?>';
     function path2url(){
       return window.location.origin+window.location.pathname+"?explorer/index/fileOut&path="+path;
     }
-    window.location.href = "<?php echo $this->pluginHost;?>static/mgame.php?url="+encodeURIComponent(path2url()+"#/"+name)+"&fext="+ext;
+    function crosUrl(url){
+      return "<?php echo $this->pluginHost;?>php/fileDown.php?url="+encodeURIComponent(url)+"&KOD_SESSION_ID="+encodeURIComponent("1")+"&CSRF_TOKEN="+encodeURIComponent(getCookie("CSRF_TOKEN"));
+    }
+    window.location.href = "http://static.tenfell.cn/kodbox/game-emulator-web/mgame.html?url="+encodeURIComponent(crosUrl(path2url())+"#/"+name)+"&fext="+ext;
   </script>
 </html>
