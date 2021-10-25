@@ -1,4 +1,8 @@
 (function (){
+    if(window.location.protocol != "http:"){
+        alert("当前暂不支持https访问,请使用http访问");
+        return;
+    }
     window.env = "thrid";
     function init(){
         var kodUserID = utils.getCookie("kodUserID");

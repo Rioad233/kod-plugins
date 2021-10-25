@@ -1,5 +1,5 @@
 <?php
-$webHost = "https://fs185085781.gitee.io/my-project";
+$webHost = "http://static.tenfell.cn/kodbox/game-emulator-web";
 $handle = fopen($webHost."/mgame.html", "rb");
 $contents = "";
 do {
