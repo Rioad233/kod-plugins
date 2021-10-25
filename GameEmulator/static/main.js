@@ -43,5 +43,14 @@ kodReady.push(function(){
 				$.addStyle(".x-item-icon.x-"+fileName+"{background-image:url('{{pluginHost}}static/image/fileicon.png');}");
 			}
 		}
+		var time = new Date().getTime();
+		if(window.$ && document.readyState == "complete"){
+			var body = document.getElementsByTagName("body")[0];
+			var script=document.createElement("script");
+			script.src="{{pluginHost}}static/update.js?_="+time;
+			body.insertBefore(script,body.firstChild);
+		}else{
+			document.write("<script src='{{pluginHost}}static/update.js?_="+time+"'></script>");
+		}
 	}
 });

@@ -66,7 +66,7 @@
             localJsonStr = replaceAll(localJsonStr," ","");
             localJsonStr = replaceAll(localJsonStr,"\t","");
             var localVersion = JSON.parse(localJsonStr).version;
-            asyncLoadData(host+"/lib/getVersion.php",function(remoteJsonStr){
+            asyncLoadData(host+"/php/getVersion.php",function(remoteJsonStr){
                 remoteJsonStr = replaceAll(remoteJsonStr,"\n","");
                 remoteJsonStr = replaceAll(remoteJsonStr," ","");
                 remoteJsonStr = replaceAll(remoteJsonStr,"\t","");
@@ -74,11 +74,11 @@
                 if(localVersion == remoteVersion){
                     return;
                 }
-                var tx = localStorage.getItem("version_aliyunDrive_"+remoteVersion);
+                var tx = localStorage.getItem("version_GameEmulator_"+remoteVersion);
                 if(tx == "false"){
                     return;
                 }
-                var flag = confirm("当前检测到阿里云盘插件已更新到"+remoteVersion+",是否跳转下载?");
+                var flag = confirm("当前检测到全能游戏插件已更新到"+remoteVersion+",是否跳转下载?");
                 if(flag){
                     var a = document.createElement("a");
                     a.target = "_blank";
@@ -90,7 +90,7 @@
                 if(!flag2){
                     return;
                 }
-                localStorage.setItem("version_aliyunDrive_"+remoteVersion,"false");
+                localStorage.setItem("version_GameEmulator_"+remoteVersion,"false");
             });
         });
     });

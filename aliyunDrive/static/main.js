@@ -1,7 +1,6 @@
 kodReady.push(function(){
 	var staticPath = "{{pluginHost}}static/";
 	// var version = '?v={{package.version}}';
-
 	var aliyunPkg = {};
 	Events.bind('storage.init.load', function(self){
 		requireAsync(staticPath+'package.js', function(package){
@@ -31,12 +30,13 @@ kodReady.push(function(){
 
 	if($.hasKey('plugin.aliyunDrive.style')) return;
 	requireAsync("{{pluginHost}}static/main.css");
+	var time = new Date().getTime();
 	if(window.$ && document.readyState == "complete"){
 		var body = document.getElementsByTagName("body")[0];
 		var script=document.createElement("script");
-		script.src="{{pluginHost}}static/update.js";
+		script.src="{{pluginHost}}static/update.js?_="+time;
 		body.insertBefore(script,body.firstChild);
 	}else{
-		document.write("<script src='{{pluginHost}}static/update.js'></script>");
+		document.write("<script src='{{pluginHost}}static/update.js?_="+time+"'></script>");
 	}
 });
