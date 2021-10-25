@@ -1,5 +1,4 @@
 (function (){
-    var version = "1.1";
     var ready = function (callback){
         if(window.$ && document.readyState == "complete"){
             callback();
