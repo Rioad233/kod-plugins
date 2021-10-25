@@ -61,12 +61,13 @@
         }
     }
     ready(function (){
-        asyncLoadData(host+"/package.json",function(localJsonStr){
+        var time = new Date().getTime();
+        asyncLoadData(host+"/package.json?_="+time,function(localJsonStr){
             localJsonStr = replaceAll(localJsonStr,"\n","");
             localJsonStr = replaceAll(localJsonStr," ","");
             localJsonStr = replaceAll(localJsonStr,"\t","");
             var localVersion = JSON.parse(localJsonStr).version;
-            asyncLoadData(host+"/lib/getVersion.php",function(remoteJsonStr){
+            asyncLoadData(host+"/lib/getVersion.php?_="+time,function(remoteJsonStr){
                 remoteJsonStr = replaceAll(remoteJsonStr,"\n","");
                 remoteJsonStr = replaceAll(remoteJsonStr," ","");
                 remoteJsonStr = replaceAll(remoteJsonStr,"\t","");
