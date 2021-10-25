@@ -2,7 +2,7 @@
 	"id":"aliyunDrive",
 	"name":"阿里云盘",
 	"title":"阿里云盘存储对接",
-	"version":"1.1",
+	"version":"1.0.0",
 	"category":"tools",
 	"source":{
 		"icon":"{{pluginHost}}static/images/icon.png"
