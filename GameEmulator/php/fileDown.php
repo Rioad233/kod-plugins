@@ -11,6 +11,12 @@ if($type == "cookie"){
     setGameCookie($_COOKIE);
     echo "";
 }else if($type == "file"){
+    header('Content-Type: application/octet-stream');
+    header('content-length: 1');
+    header('Content-Disposition: attachment; filename="1.txt";');
+    if($_SERVER['REQUEST_METHOD']=='OPTIONS'){
+        return;
+    }
     $url = $_GET['url'];
     $cookies = getGameCookie();
     $cookieStr = "";
@@ -29,12 +35,10 @@ if($type == "cookie"){
     curl_setopt($curl, CURLOPT_HEADER, 0);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($curl, CURLOPT_MAXREDIRS, 20);
+    curl_setopt($curl, CURLOPT_MAXREDIRS, 1000);
     $res = curl_exec($curl);
     curl_errno($curl);
     curl_close($curl);
-    header('Content-Type: '.curl_getinfo($curl,CURLINFO_CONTENT_TYPE));
-    header('Content-Disposition: attachment; filename="";');
     echo $res;
 }
 
