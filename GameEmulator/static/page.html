@@ -24,7 +24,7 @@
       return window.location.origin+window.location.pathname+"?explorer/index/fileOut&path="+path;
     }
     function crosUrl(url){
-      return ajaxHost+"/fileDown.php?type=file&name="+name+"&url="+encodeURIComponent(url);
+      return ajaxHost+"/fileDown.php?type=file&url="+encodeURIComponent(url);
     }
     function ajax(options){
         if(!options.type){
@@ -96,7 +96,7 @@
     }
     function actionUrl(userId){
       ajax({
-        url:ajaxHost+"/fileDown.php?type=cookie&name="+name,
+        url:ajaxHost+"/fileDown.php?type=cookie",
         dataType:"text",
         success:function (){
           window.location.href = "//fs185085781.gitee.io/kod-plugins/GameEmulatorWeb/mgame.html?url="+encodeURIComponent(crosUrl(path2url())+"#/"+name)+"&fext="+encodeURIComponent(ext)+"&userId="+encodeURIComponent(userId)+"&ajaxHost="+encodeURIComponent(ajaxHost);

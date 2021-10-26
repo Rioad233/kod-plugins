@@ -7,13 +7,12 @@ header("Access-Control-Allow-Headers: *");//这里“Access-Token”是我要传
 header("Access-Control-Expose-Headers: *");
 require_once "cache.php";
 $type = $_GET['type'];
-$name = $_GET['name'];
 if($type == "cookie"){
-    setGameCookie($name,$_COOKIE);
+    setGameCookie($_COOKIE);
     echo "";
 }else if($type == "file"){
     $url = $_GET['url'];
-    $cookies = getGameCookie($name);
+    $cookies = getGameCookie();
     $cookieStr = "";
     foreach($cookies as $key => $cookie){
         $oneStr = $cookie;
@@ -35,7 +34,7 @@ if($type == "cookie"){
     curl_errno($curl);
     curl_close($curl);
     header('Content-Type: '.curl_getinfo($curl,CURLINFO_CONTENT_TYPE));
-    header('Content-Disposition: attachment; filename="'.$name.'";');
+    header('Content-Disposition: attachment; filename="";');
     echo $res;
 }
 
