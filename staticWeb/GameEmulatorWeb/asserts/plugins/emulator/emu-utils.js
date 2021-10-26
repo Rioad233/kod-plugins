@@ -23,7 +23,7 @@
                 if (a && a.src && a.src.indexOf("emulator.js") != -1) {
                     a.src = emuHost + "/js/emulator.js";
                 } else {
-                    //console.log(a);
+                    console.log("insertBefore",a);
                 }
                 this.insertBeforeTemp(a, b);
             }
@@ -34,7 +34,7 @@
                 } else if (a && a.src && a.src.indexOf("ad.html") != -1) {
                     a.src = emuHost + "/data/ad.html"
                 } else {
-                    //console.log(a);
+                    console.log("appendChild",a);
                 }
                 this.appendChildTemp(a);
             }
@@ -81,10 +81,10 @@
                         break;
                     }
                     if (!has) {
-                        console.log(b);
+                        console.log("XMLHttpRequest!has",b);
                     }
                 } else {
-                    console.log(b);
+                    console.log("XMLHttpRequest else",b);
                 }
                 return this.openTemp(a, b, c);
             }
