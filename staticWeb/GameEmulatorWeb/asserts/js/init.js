@@ -9,11 +9,6 @@
     //var ajaxHost = window.location.origin;
     /*静态绝对host,每次后台更换地方发布,此处需要改配置,适合前后端分离开发*/
     var ajaxHost = "https://hm10735.h61.hmie.cn/php-file/game-emulator";
-    if(window.env && window.env == "thrid"){
-        var hosz = (window.location.origin+window.location.pathname).split("/");
-        hosz.length = hosz.length -2;
-        ajaxHost = hosz.join("/")+"/php";
-    }
     var search = script.src.substring(script.src.indexOf("?"));
     /*使用远程cdn,脱离本地文件(此cdn由gitee pages提供)*/
     var utiljs = "https://fs185085781.gitee.io/cn-tenfell-cloud/smart-ui/boot/utils.js"+search;

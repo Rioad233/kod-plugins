@@ -268,12 +268,25 @@
         },
         mounted:function() {
             var that = this;
-            that.initJindu();
-            that.initLianzhao();
-            that.initBiosSelect();
-            that.initMnqSelect();
+            if(utils.getParameter("ajaxHost")){
+                utils.ajaxHost = utils.getParameter("ajaxHost");
+            }
+            if(utils.getParameter("userId")){
+                utils.user.loginById(utils.getParameter("userId"),function (){
+                    that.init();
+                });
+            }else{
+                that.init();
+            }
         },
         methods:{
+            init:function (){
+                var that = this;
+                that.initJindu();
+                that.initLianzhao();
+                that.initBiosSelect();
+                that.initMnqSelect();
+            },
             biosSelectConfirm:function (item,index){
                 item.index = index;
                 utils.setLocalStorage("biosSetTmp",item);

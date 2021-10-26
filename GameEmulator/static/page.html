@@ -8,44 +8,81 @@
   <body>
   </body>
   <script>
-    function ajaxGet(url,fn){
-      var xmlhttp;
-      if (window.XMLHttpRequest){
-        xmlhttp=new XMLHttpRequest();
-      }else{
-        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      xmlhttp.onreadystatechange=function(){
-        if(xmlhttp.readyState==4){
-          try{
-            fn(xmlhttp.responseText);
-          }catch (e) {
-            console.warn(e);
-          }
-        }
-      }
-      xmlhttp.open("GET",url,true);
-      xmlhttp.send();
-    }
-    function getCookie(key){
-      var arr = document.cookie.match(new RegExp("(^| )"+key+"=([^;]*)(;|$)"));
-      if(arr != null){
-        return unescape(arr[2]);
-      }else{
-        return null;
-      }
-    }
     let path = '<?php echo @$_GET["path"];?>';
     let ext = '<?php echo @$_GET["ext"];?>';
     let name = '<?php echo @$_GET["name"];?>';
+    let ajaxHost = "<?php echo $this->pluginHost;?>php";
     function path2url(){
       return window.location.origin+window.location.pathname+"?explorer/index/fileOut&path="+path;
     }
     function crosUrl(url){
-      return "<?php echo $this->pluginHost;?>php/fileDown.php?type=file&name="+name+"&url="+encodeURIComponent(url);
+      return ajaxHost+"/fileDown.php?type=file&name="+name+"&url="+encodeURIComponent(url);
     }
-    ajaxGet("<?php echo $this->pluginHost;?>php/fileDown.php?type=cookie&name="+name,function (){
-      window.location.href = "https://hm10735.h61.hmie.cn/game-emulator/mgame.html?url="+encodeURIComponent(crosUrl(path2url())+"#/"+name)+"&fext="+ext;
+    function jQueryInit(callback){
+      if(window.jQuery && window.Cookie){
+        callback();
+      }else{
+        setTimeout(jQueryInit,300,callback);
+      }
+    }
+    function regUser(data,fn){
+      $.ajax({
+        url:ajaxHost+"/user.php?type=reg",
+        type:"POST",
+        contentType:"application/json",
+        dataType:"json",
+        data:JSON.stringify(data),
+        success:function(res){
+          if(res.flag){
+            //注册成功
+            fn(res.data);
+          }else{
+            fn(false);
+          }
+        }
+      });
+    }
+    function logUser(data,fn){
+      $.ajax({
+        url:ajaxHost+"/user.php?type=login",
+        type:"POST",
+        contentType:"application/json",
+        dataType:"json",
+        data:JSON.stringify(data),
+        success:function(res){
+          if(res.flag){
+            //登录成功
+            fn(res.data);
+          }else{
+            fn(false);
+          }
+        }
+      });
+    }
+    function actionUrl(userId){
+      $.ajax({
+        url:ajaxHost+"/fileDown.php?type=cookie&name="+name,
+        dataType:"text",
+        success:function (){
+          window.location.href = "https://hm10735.h61.hmie.cn/game-emulator/mgame.html?url="+encodeURIComponent(crosUrl(path2url())+"#/"+name)+"&fext="+encodeURIComponent(ext)+"&userId="+encodeURIComponent(userId)+"&ajaxHost="+encodeURIComponent(ajaxHost);
+        }
+      });
+    }
+    jQueryInit(function (){
+      var kodUserID = window.Cookie.get("kodUserID");
+      var host = window.location.host;
+      var data = {"username":host+kodUserID,"password":"123456"};
+      regUser(data,function (res){
+        if(res){
+          actionUrl(res.id);
+        }else{
+          logUser(data,function (res2){
+            if(res2){
+              actionUrl(res2.id);
+            }
+          });
+        }
+      });
     });
   </script>
 </html>
