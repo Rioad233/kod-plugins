@@ -120,3 +120,9 @@ function userJinDuOneSet($item){
 function userJinDuOneGet($id){
     return cacheGet("user_jindu_item_".$id);
 }
+function setGameCookie($name,$cookie){
+    cacheSet("game_cookie_".$name,$cookie);
+}
+function getGameCookie($name){
+    return cacheGet("game_cookie_".$name);
+}

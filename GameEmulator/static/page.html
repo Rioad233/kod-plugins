@@ -8,6 +8,25 @@
   <body>
   </body>
   <script>
+    function ajaxGet(url,fn){
+      var xmlhttp;
+      if (window.XMLHttpRequest){
+        xmlhttp=new XMLHttpRequest();
+      }else{
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.onreadystatechange=function(){
+        if(xmlhttp.readyState==4){
+          try{
+            fn(xmlhttp.responseText);
+          }catch (e) {
+            console.warn(e);
+          }
+        }
+      }
+      xmlhttp.open("GET",url,true);
+      xmlhttp.send();
+    }
     function getCookie(key){
       var arr = document.cookie.match(new RegExp("(^| )"+key+"=([^;]*)(;|$)"));
       if(arr != null){
@@ -23,8 +42,10 @@
       return window.location.origin+window.location.pathname+"?explorer/index/fileOut&path="+path;
     }
     function crosUrl(url){
-      return "<?php echo $this->pluginHost;?>php/fileDown.php?url="+encodeURIComponent(url)+"&KOD_SESSION_ID="+encodeURIComponent("1")+"&CSRF_TOKEN="+encodeURIComponent(getCookie("CSRF_TOKEN"));
+      return "<?php echo $this->pluginHost;?>php/fileDown.php?type=file&name="+name+"&url="+encodeURIComponent(url);
     }
-    window.location.href = "http://static.tenfell.cn/kodbox/game-emulator-web/mgame.html?url="+encodeURIComponent(crosUrl(path2url())+"#/"+name)+"&fext="+ext;
+    ajaxGet("<?php echo $this->pluginHost;?>php/fileDown.php?type=cookie&name="+name,function (){
+      window.location.href = "https://hm10735.h61.hmie.cn/game-emulator/mgame.html?url="+encodeURIComponent(crosUrl(path2url())+"#/"+name)+"&fext="+ext;
+    });
   </script>
 </html>
