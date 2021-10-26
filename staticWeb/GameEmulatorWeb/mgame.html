@@ -203,6 +203,9 @@
             if(has){
                 console.log("使用默认core");
                 core = value;
+                if(fext!="fds"){
+                    bios = "";
+                }
                 break;
             }
         }
@@ -304,9 +307,9 @@
                 var columns = [
                     {text:"无",value:""},
                     {text:"磁碟机",value:utils.rootPath+"/asserts/plugins/emulator/bios/disksys.rom"},
-                    {text:"Neo Geo Games",value:utils.rootPath+"/asserts/plugins/emulator/bios/neogeo.zip"},
-                    {text:"IGS Games",value:"https://gitee.com/fs185085781/kod-plugins/raw/master/staticWeb/GameEmulatorWeb/asserts/plugins/emulator/bios/pgm.zip"},
-                    {text:"ISG Master 2006",value:utils.rootPath+"/asserts/plugins/emulator/bios/isgsm.zip"},
+                    {text:"Neo Geo Games",value:utils.rootPath+"/asserts/plugins/emulator/bios/neogeo.1zip"},
+                    {text:"IGS Games",value:utils.rootPath+"/asserts/plugins/emulator/bios/pgm.1zip"},
+                    {text:"ISG Master 2006",value:utils.rootPath+"/asserts/plugins/emulator/bios/isgsm.1zip"},
                 ]
                 that.setting.game.bios.columns = columns;
                 var item = utils.getLocalStorage("biosSet");
