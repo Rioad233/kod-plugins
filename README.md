@@ -14,6 +14,9 @@ kod的插件
 1.  将目录拷贝到kod的plugins  
 2.  去插件中心找到该插件启用即可  
 
+#### 下载地址
+https://gitee.com/fs185085781/kod-plugins/releases
+
 #### 说明
  如果存在bug,欢迎提交issue,本人将在一周内修复  
 
