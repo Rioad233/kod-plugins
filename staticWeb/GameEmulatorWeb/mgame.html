@@ -268,11 +268,11 @@
         },
         mounted:function() {
             var that = this;
-            if(utils.getParameter("ajaxHost")){
-                utils.ajaxHost = utils.getParameter("ajaxHost");
+            if(utils.getParamer("ajaxHost")){
+                utils.ajaxHost = utils.getParamer("ajaxHost");
             }
-            if(utils.getParameter("userId")){
-                utils.user.loginById(utils.getParameter("userId"),function (){
+            if(utils.getParamer("userId")){
+                utils.user.loginById(utils.getParamer("userId"),function (){
                     that.init();
                 });
             }else{

@@ -12,21 +12,56 @@
     let ext = '<?php echo @$_GET["ext"];?>';
     let name = '<?php echo @$_GET["name"];?>';
     let ajaxHost = "<?php echo $this->pluginHost;?>php";
+    function getCookie(key){
+      var arr = document.cookie.match(new RegExp("(^| )"+key+"=([^;]*)(;|$)"));
+      if(arr != null){
+        return unescape(arr[2]);
+      }else{
+        return null;
+      }
+    }
     function path2url(){
       return window.location.origin+window.location.pathname+"?explorer/index/fileOut&path="+path;
     }
     function crosUrl(url){
       return ajaxHost+"/fileDown.php?type=file&name="+name+"&url="+encodeURIComponent(url);
     }
-    function jQueryInit(callback){
-      if(window.jQuery && window.Cookie){
-        callback();
-      }else{
-        setTimeout(jQueryInit,300,callback);
-      }
+    function ajax(options){
+        if(!options.type){
+          options.type = "GET";
+        }
+        if(!options.dataType){
+          options.dataType = "text";
+        }
+        var xmlhttp;
+        if (window.XMLHttpRequest){
+          xmlhttp=new XMLHttpRequest();
+        }else{
+          xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange=function(){
+          if(xmlhttp.readyState==4){
+            try{
+              if(options.success){
+                var res = xmlhttp.responseText;
+                if(options.dataType == "json"){
+                  res = JSON.parse(res);
+                }
+                options.success(res);
+              }
+            }catch (e) {
+              console.warn(e);
+            }
+          }
+        }
+        xmlhttp.open(options.type,options.url,true);
+        if(options.contentType){
+          xmlhttp.setRequestHeader("content-type",options.contentType);
+        }
+        xmlhttp.send(options.data);
     }
     function regUser(data,fn){
-      $.ajax({
+      ajax({
         url:ajaxHost+"/user.php?type=reg",
         type:"POST",
         contentType:"application/json",
@@ -43,7 +78,7 @@
       });
     }
     function logUser(data,fn){
-      $.ajax({
+      ajax({
         url:ajaxHost+"/user.php?type=login",
         type:"POST",
         contentType:"application/json",
@@ -60,7 +95,7 @@
       });
     }
     function actionUrl(userId){
-      $.ajax({
+      ajax({
         url:ajaxHost+"/fileDown.php?type=cookie&name="+name,
         dataType:"text",
         success:function (){
@@ -68,8 +103,8 @@
         }
       });
     }
-    jQueryInit(function (){
-      var kodUserID = window.Cookie.get("kodUserID");
+    function init(){
+      var kodUserID = getCookie("kodUserID");
       var host = window.location.host;
       var data = {"username":host+kodUserID,"password":"123456"};
       regUser(data,function (res){
@@ -83,6 +118,7 @@
           });
         }
       });
-    });
+    }
+    init();
   </script>
 </html>
