@@ -9,12 +9,20 @@ require_once "medoo.php";
 $database = new medoo([
     // 必须配置项
     'database_type' => 'mysql',
-    'database_name' => '数据库名',
-    'server' => '数据库ip',
-    'username' => '数据库用户名',
-    'password' => '数据库密码',
+    'database_name' => 'mysql9741647_db',
+    'server' => '10.18.2.1',
+    'username' => 'mysql9741647',
+    'password' => 'V8WnMUGYPK',
     'charset' => 'utf8'
 ]);
+/*
+ CREATE TABLE `nes_user`  (
+  `id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `password` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+*/
 function return_data($flag,$msg,$data){
     $res = array("flag"=>$flag,"msg"=>$msg);
     if(!empty($data)){
