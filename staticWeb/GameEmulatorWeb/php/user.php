@@ -5,7 +5,24 @@ header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: *");
 header("Access-Control-Allow-Headers: *");//这里“Access-Token”是我要传到后台的内容key
 header("Access-Control-Expose-Headers: *");
-require_once "cache.php";
+require_once "medoo.php";
+$database = new medoo([
+    // 必须配置项
+    'database_type' => 'mysql',
+    'database_name' => '数据库名',
+    'server' => '数据库ip',
+    'username' => '数据库用户名',
+    'password' => '数据库密码',
+    'charset' => 'utf8'
+]);
+function return_data($flag,$msg,$data){
+    $res = array("flag"=>$flag,"msg"=>$msg);
+    if(!empty($data)){
+        $res["data"] = $data;
+    }
+    $str = json_encode($res);
+    return $str;
+}
 if($_SERVER['REQUEST_METHOD']=='OPTIONS'){
 echo return_data(false,"不支持OPTIONS请求","");
 return;
@@ -18,7 +35,17 @@ if($_GET["type"] == "login"){
         echo return_data(false,"用户登录失败","");
         return;
     }
-    $user=userSelect($data);
+    $where = array("or"=>array());
+    if(!empty($data["id"])){
+        $where["or"]["id"] = $data["id"];
+    }
+    if(!empty($data["username"]) && !empty($data["password"])){
+        $where["or"]["and"] = array(
+            "username"=>$data["username"],
+            "password"=>$data["password"]
+        );
+    }
+    $user = $database->get("nes_user", "*", $where);
     if(empty($user)){
         echo return_data(false,"用户登录失败","");
         return;
@@ -31,7 +58,9 @@ if($_GET["type"] == "login"){
         echo return_data(false,"用户名密码不可为空","");
         return;
     }
-    $user = userSelectByUserName($data["username"]);
+    $user = $database->get("nes_user", "*", [
+        "username" => $data["username"]
+    ]);
     if(!empty($user)){
         echo return_data(false,"当前用户已被注册","");
         return;
@@ -41,8 +70,10 @@ if($_GET["type"] == "login"){
     "username"=>$data["username"],
     "password"=>$data["password"]
     );
-    userInsertUpdate($db);
-    $db = userSelectById($db["id"]);
+    $database->insert("nes_user", $db);
+    $db = $database->get("nes_user", "*", [
+        "id" => $db["id"]
+    ]);
     if(empty($db)){
         echo return_data(false,"注册失败","");
         return;

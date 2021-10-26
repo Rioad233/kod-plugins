@@ -36,12 +36,6 @@ function userInsertUpdate($user){
     if($user['username']){
         cacheSet("user_username_".$user["username"],$user);
     }
-    if($user['wx_open_id']){
-        cacheSet("user_wx_open_id_".$user["wx_open_id"],$user);
-    }
-    if($user['qq_open_id']){
-        cacheSet("user_qq_open_id_".$user["qq_open_id"],$user);
-    }
 }
 function userDelete($user){
     if($user['id']){
@@ -50,28 +44,12 @@ function userDelete($user){
     if($user['username']){
         cacheDel("user_username_".$user["username"]);
     }
-    if($user['wx_open_id']){
-        cacheDel("user_wx_open_id_".$user["wx_open_id"]);
-    }
-    if($user['qq_open_id']){
-        cacheDel("user_qq_open_id_".$user["qq_open_id"]);
-    }
 }
 function userSelect($data){
     $user=false;
-    if(!empty($data["wx_open_id"])){
-        if(!$user){
-            $user = userSelectByWx($data["wx_open_id"]);
-        }
-    }
     if(!empty($data["id"])){
         if(!$user){
             $user = userSelectById($data["id"]);
-        }
-    }
-    if(!empty($data["qq_open_id"])){
-        if(!$user){
-            $user = userSelectByQQ($data["qq_open_id"]);
         }
     }
     if(!empty($data["username"]) && !empty($data["password"])){
@@ -89,12 +67,6 @@ function userSelectById($id){
 }
 function userSelectByUserName($username){
     return cacheGet("user_username_".$username);
-}
-function userSelectByQQ($qid){
-    return cacheGet("user_qq_open_id_".$qid);
-}
-function userSelectByWx($wid){
-    return cacheGet("user_wx_open_id_".$wid);
 }
 function userJinDuListGet($userId,$game){
     return cacheGet("user_jindu_".$userId."_".$game);
