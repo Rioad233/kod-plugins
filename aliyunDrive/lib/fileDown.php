@@ -12,6 +12,6 @@ curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 $res = curl_exec($curl);
 curl_errno($curl);
 curl_close($curl);
-header('Content-Type: '.curl_getinfo($curl,CURLINFO_CONTENT_TYPE));
+header('Content-Type: application/octet-stream');
 header('Content-Disposition: attachment; filename="'.$fileName.'";');
 echo $res;
