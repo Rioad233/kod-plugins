@@ -9,10 +9,10 @@ require_once "medoo.php";
 $database = new medoo([
     // 必须配置项
     'database_type' => 'mysql',
-    'database_name' => 'mysql9741647_db',
-    'server' => '10.18.2.1',
-    'username' => 'mysql9741647',
-    'password' => 'V8WnMUGYPK',
+    'database_name' => '数据库名',
+    'server' => '数据库ip',
+    'username' => '数据库用户名',
+    'password' => '数据库密码',
     'charset' => 'utf8'
 ]);
 /*
