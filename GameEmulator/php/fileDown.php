@@ -12,9 +12,9 @@ if($type == "cookie"){
     echo "";
 }else if($type == "file"){
     header('Content-Type: application/octet-stream');
-    header('content-length: 1');
     header('Content-Disposition: attachment; filename="1.txt";');
-    if($_SERVER['REQUEST_METHOD']=='OPTIONS'){
+    if($_SERVER['REQUEST_METHOD']=='OPTIONS' || $_SERVER['REQUEST_METHOD']=='HEAD'){
+        header('content-length: 1');
         return;
     }
     $url = $_GET['url'];
