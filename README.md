@@ -17,6 +17,9 @@ kod的插件
 #### 下载地址
 https://gitee.com/fs185085781/kod-plugins/releases
 
+#### 问题排查
+https://gitee.com/fs185085781/kod-plugins/wikis/
+
 #### 说明
  如果存在bug,欢迎提交issue,本人将在一周内修复  
  如紧急请加QQ185085781进行处理  
