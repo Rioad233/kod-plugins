@@ -34,7 +34,7 @@
                 } else if (a && a.src && a.src.indexOf("ad.html") != -1) {
                     a.src = emuHost + "/data/ad.html"
                 } else {
-                    console.log("appendChild",a);
+                    //console.log("appendChild",a);
                 }
                 this.appendChildTemp(a);
             }
