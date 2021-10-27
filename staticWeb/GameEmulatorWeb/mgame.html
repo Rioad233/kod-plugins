@@ -340,12 +340,13 @@
             },
             initBiosSelect:function(){
                 var that = this;
+                var biosHost = utils.rootPath+"/asserts/plugins/emulator/bios";
                 var columns = [
                     {text:"无",value:""},
-                    {text:"磁碟机",value:utils.rootPath+"/asserts/plugins/emulator/bios/disksys.rom"},
-                    {text:"Neo Geo Games",value:"https://hm10735.h61.hmie.cn/zips/down.php/game/neogeo.zip"},
-                    {text:"IGS Games",value:"https://hm10735.h61.hmie.cn/zips/down.php/game/pgm.zip"},
-                    {text:"ISG Master 2006",value:"https://hm10735.h61.hmie.cn/zips/down.php/game/isgsm.zip"},
+                    {text:"磁碟机",value:biosHost+"/disksys.rom"},
+                    {text:"Neo Geo Games",value:biosHost+"/neogeo.zip"},
+                    {text:"IGS Games",value:biosHost+"/pgm.zip"},
+                    {text:"ISG Master 2006",value:biosHost+"/isgsm.zip"},
                 ]
                 that.setting.game.bios.columns = columns;
                 var item = utils.getLocalStorage("biosSet");

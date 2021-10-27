@@ -20,12 +20,6 @@
         return null;
       }
     }
-    function path2url(){
-      return window.location.origin+window.location.pathname+"?explorer/index/fileOut&path="+path;
-    }
-    function crosUrl(url){
-      return ajaxHost+"/fileDown.php?type=file&url="+encodeURIComponent(url);
-    }
     function ajax(options){
         if(!options.type){
           options.type = "GET";
@@ -95,11 +89,20 @@
       });
     }
     function actionUrl(userId){
+      var infoUrl = window.location.origin+window.location.pathname+"?explorer/index/pathInfo";
+      var infoData = "dataArr="+encodeURIComponent('[{"path":"'+path+'"}]')+"&CSRF_TOKEN="+encodeURIComponent(getCookie("CSRF_TOKEN"))+"&API_ROUTE="+encodeURIComponent("explorer/index/pathInfo");
       ajax({
-        url:ajaxHost+"/fileDown.php?type=cookie",
-        dataType:"text",
-        success:function (){
-          window.location.href = "//fs185085781.gitee.io/kod-plugins/GameEmulatorWeb/mgame.html?url="+encodeURIComponent(crosUrl(path2url())+"#/"+name)+"&fext="+encodeURIComponent(ext)+"&userId="+encodeURIComponent(userId)+"&ajaxHost="+encodeURIComponent(ajaxHost);
+        url:infoUrl,
+        contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+        dataType:"json",
+        type:"POST",
+        data:infoData,
+        success:function(res){
+          if(!res.code){
+            return;
+          }
+          var gameUrl = res.data.downloadPath;
+          window.location.href = ajaxHost+"/mgame.php?url="+encodeURIComponent(gameUrl+"#/"+name)+"&fext="+encodeURIComponent(ext)+"&userId="+encodeURIComponent(userId)+"&ajaxHost="+encodeURIComponent(ajaxHost);
         }
       });
     }
