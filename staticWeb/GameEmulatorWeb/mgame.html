@@ -223,6 +223,7 @@
             core:core,
             playerName:playerName
         }
+        console.log(options);
         emuUtils.gameId = options.id;
         emuUtils.initGame(options);
     }
@@ -307,9 +308,9 @@
                 var columns = [
                     {text:"无",value:""},
                     {text:"磁碟机",value:utils.rootPath+"/asserts/plugins/emulator/bios/disksys.rom"},
-                    {text:"Neo Geo Games",value:utils.rootPath+"/asserts/plugins/emulator/bios/neogeo.1zip"},
-                    {text:"IGS Games",value:utils.rootPath+"/asserts/plugins/emulator/bios/pgm.1zip"},
-                    {text:"ISG Master 2006",value:utils.rootPath+"/asserts/plugins/emulator/bios/isgsm.1zip"},
+                    {text:"Neo Geo Games",value:utils.rootPath+"/asserts/plugins/emulator/bios/neogeo.zip"},
+                    {text:"IGS Games",value:utils.rootPath+"/asserts/plugins/emulator/bios/pgm.zip"},
+                    {text:"ISG Master 2006",value:utils.rootPath+"/asserts/plugins/emulator/bios/isgsm.zip"},
                 ]
                 that.setting.game.bios.columns = columns;
                 var item = utils.getLocalStorage("biosSet");
