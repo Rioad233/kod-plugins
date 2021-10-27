@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 function return_data($flag,$msg,$data){
     $res = array("flag"=>$flag,"msg"=>$msg);
     if(!empty($data)){
