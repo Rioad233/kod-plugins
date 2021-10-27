@@ -68,6 +68,17 @@
                                 :default-index="setting.game.bios.index"
                         ></van-picker>
                     </van-popup>
+                    <van-field
+                            v-model="gameUrl"
+                            center
+                            clearable
+                            label="游戏链接"
+                            placeholder="请输入游戏直链"
+                    >
+                        <template #button>
+                            <van-button size="small" type="primary" @click="zhilianPlay()">直链玩</van-button>
+                        </template>
+                    </van-field>
                 </van-cell-group>
                 <h2 class="dialog-title">画面设置</h2>
                 <van-cell-group>
@@ -223,7 +234,6 @@
             core:core,
             playerName:playerName
         }
-        console.log(options);
         emuUtils.gameId = options.id;
         emuUtils.initGame(options);
     }
@@ -234,6 +244,7 @@
         data:{
             showSet:false,
             setType:0,
+            gameUrl:"",
             jdname:"",//进度名称
             jinduList:[],//进度列表
             lzname:"",//连招名称
@@ -282,6 +293,7 @@
             }else{
                 that.init();
             }
+            that.gameUrl = utils.getParamer("url");
         },
         methods:{
             init:function (){
@@ -290,6 +302,29 @@
                 that.initLianzhao();
                 that.initBiosSelect();
                 that.initMnqSelect();
+                that.zhiLianTip();
+
+            },
+            zhilianPlay:function (){
+                var that = this;
+                window.location.href = utils.urlAddProp(window.location.href,"url",encodeURIComponent(that.gameUrl));
+            },
+            zhiLianTip:function (){
+              var time = 0;
+              function checkTip(){
+                  if(window.emuUtils && window.emuUtils.emu && window.emuUtils.emu.currentFrameNum()<1){
+                      utils.$.errorMsg("当前游戏加载比较慢,建议使用直链玩^_^");
+                  }else if(window.emuUtils && window.emuUtils.emu && window.emuUtils.emu.currentFrameNum()>0){
+                      if(time>0){
+                          clearInterval(time);
+                      }
+                  }
+              }
+              setTimeout(function (){
+                  time = setInterval(function (){
+                      checkTip();
+                  },5000);
+              },25000);
             },
             biosSelectConfirm:function (item,index){
                 item.index = index;
