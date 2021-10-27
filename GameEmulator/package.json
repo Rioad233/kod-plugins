@@ -2,7 +2,7 @@
 	"id":"GameEmulator",
 	"name":"游戏模拟器",
 	"title":"全能模拟,支持街机",
-	"version":"1.0.1",
+	"version":"1.0.2",
     "source":{
 		"icon":"{{pluginHost}}static/image/icon.png",
 		"screenshoot":[
