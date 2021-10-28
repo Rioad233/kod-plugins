@@ -133,19 +133,12 @@
             }
         },
         getIntId:function (id){
-            function dgInt(intId){
-                return 1;
-            }
             var length = id.length;
             var str = "";
             for(var i=0;i<length;i++){
                 str += id.charCodeAt(i);
             }
-            while(str.length>8){
-                str = dgInt(str);
-            }
-            console.log(str);
-            return parseInt(str);
+            return str;
         },
         initGame: function (options) {
             window.EJS_player = options.player;
