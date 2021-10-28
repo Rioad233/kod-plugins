@@ -8,13 +8,163 @@
 <div style="width:640px;height:480px;max-width:100%">
     <div id="game"></div>
 </div>
+<script>
+    window.emuUtils = {
+        delayAction: function (tjFn, acFn, maxDelay) {
+            var that = this;
+            if (!maxDelay) {
+                maxDelay = 24 * 60 * 60 * 1000;
+            }
+            var key = "da" + Date.now() + parseInt(Math.random() * 10000);
+            var timeKey = "time" + key;
+            that[timeKey] = Date.now();
+            that[key] = function () {
+                if (Date.now() - that[timeKey] > maxDelay) {
+                    that.removeProp(that, key);
+                    that.removeProp(that, timeKey);
+                } else {
+                    if (tjFn()) {
+                        that.removeProp(that, key);
+                        that.removeProp(that, timeKey);
+                        acFn();
+                    } else {
+                        setTimeout(that[key], 100);
+                    }
+                }
+            }
+            that[key]();
+        },
+        removeAd: function () {
+            var ds = setInterval(function () {
+                var iframe = document.querySelector("iframe");
+                if (!iframe) {
+                    return;
+                }
+                var div = iframe.parentElement;
+                if (!div) {
+                    return;
+                }
+                div.remove();
+                clearInterval(ds);
+            }, 300);
+        },
+        removeProp: function (obj, fieldName) {
+            try {
+                delete obj[fieldName];
+            } catch (e) {
+                obj[fieldName] = undefined;
+            }
+        }
+    };
+    var getEmuHost = function (){
+        var url = window.location.origin+window.location.pathname;
+        var urlsz = url.split("/");
+        urlsz.length = urlsz.length-1;
+        url = urlsz.join("/");
+        return url+"/asserts/plugins/emulator";
+    }
+    var emuHost = getEmuHost();
+    var pojieJs = function () {
+        var that = this;
+        Element.prototype.insertBeforeTemp = Element.prototype.insertBefore;
+        Element.prototype.insertBefore = function (a, b) {
+            if (a && a.src && a.src.indexOf("emulator.js") != -1) {
+                a.src = emuHost + "/js/emulator.js";
+            } else {
+                console.log("insertBefore",a);
+            }
+            return this.insertBeforeTemp(a, b);
+        }
+        Element.prototype.appendChildTemp = Element.prototype.appendChild;
+        Element.prototype.appendChild = function (a) {
+            if (a && a.src && a.src.indexOf("webrtc-adapter.js") != -1) {
+                a.src = emuHost + "/js/webrtc-adapter.js";
+            } else if (a && a.src && a.src.indexOf("ad.html") != -1) {
+                a.src = emuHost + "/data/ad.html"
+            } else {
+                console.log("appendChild",a);
+            }
+            return this.appendChildTemp(a);
+        }
+        XMLHttpRequest.prototype.openTemp = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function (a, b, c) {
+            if (b.indexOf("/v.json") != -1) {
+                b = emuHost + "/data/v.json";
+            } else if (b.indexOf("/extract7z.js") != -1) {
+                b = emuHost + "/js/extract7z.js";
+            } else if (b.indexOf(".data") != -1) {
+                var asms = [
+                    "32x-wasm.data",
+                    "a2600-wasm.data",
+                    "arcade-wasm.data",
+                    "gb-asmjs.data",
+                    "gba-wasm.data",
+                    "n64-asmjs.data",
+                    "nds-wasm.data",
+                    "nes-wasm.data",
+                    "saturn-asmjs.data",
+                    "sega-wasm.data",
+                    "segacd-asmjs.data",
+                    "snes-wasm.data",
+                    "vb-wasm.data",
+                    "a7800-wasm.data",
+                    "lynx-wasm.data",
+                    "jaguar-wasm.data",
+                    "ws-wasm.data",
+                    "bluemsx-wasm.data",
+                    "ngp-wasm.data",
+                    "pce-wasm.data",
+                    "psx-wasm.data"
+                ];
+                var has = false;
+                for (var i = 0; i < asms.length; i++) {
+                    if (!asms[i]) {
+                        continue;
+                    }
+                    if (b.indexOf("/" + asms[i]) == -1) {
+                        continue;
+                    }
+                    b = emuHost + "/ams/" + asms[i];
+                    has = true;
+                    break;
+                }
+                if (!has) {
+                    console.log("XMLHttpRequest!has",b);
+                }
+            } else {
+                console.log("XMLHttpRequest else",b);
+            }
+            return this.openTemp(a, b, c);
+        }
+    }
+    pojieJs();
+    //删除广告的叉叉小图标
+    emuUtils.removeAd();
+    //页面加载完毕后直接进游戏
+    emuUtils.delayAction(function () {
+        return document.querySelector(".ejs--73f9b4e94a7a1fe74e11107d5ab2ef");
+    }, function () {
+        document.querySelector(".ejs--73f9b4e94a7a1fe74e11107d5ab2ef").click();
+    });
+    //document.write('<script src="https://www.emulatorjs.com/loader.js"><'+'/script>');
+    document.write('<script src="'+emuHost+'/js/loader.js"><'+'/script>');
+</script>
 <script type="text/javascript">
     EJS_player = '#game';
-    EJS_biosUrl = './asserts/plugins/emulator/bios/pgm.zip'; // Url to Bios file
-    EJS_gameUrl = './roms/orlegend.zip'; // Url to Game rom
-    EJS_gameID = 7;
-    EJS_core = 'arcade';
+    EJS_biosUrl = ''; // Url to Bios file
+    EJS_gameUrl = './roms/超级玛丽.nes'; // Url to Game rom
+    EJS_gameID = "10000";
+    EJS_core = 'nes';
+    EJS_playerName = "nnana";
 </script>
-<script src="https://www.emulatorjs.com/loader.js"></script>
+<!--<script>
+    window.EJS_player = options.player;
+    window.EJS_biosUrl = options.bios;
+    window.EJS_gameUrl = options.gameUrl;
+    window.EJS_gameID = options.id;
+    window.EJS_core = options.core;
+    window.EJS_playerName = options.playerName;
+</script>-->
+<!--<script src="https://www.emulatorjs.com/loader.js"></script>-->
 </body>
 </html>
