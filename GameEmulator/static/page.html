@@ -12,6 +12,7 @@
     let ext = '<?php echo @$_GET["ext"];?>';
     let name = '<?php echo @$_GET["name"];?>';
     let ajaxHost = "<?php echo $this->pluginHost;?>php";
+    var webHost = window.location.origin+window.location.pathname;
     function getCookie(key){
       var arr = document.cookie.match(new RegExp("(^| )"+key+"=([^;]*)(;|$)"));
       if(arr != null){
@@ -88,11 +89,23 @@
         }
       });
     }
-    function actionUrl(userId){
-      var infoUrl = window.location.origin+window.location.pathname+"?explorer/index/pathInfo";
+    function getUserName(fn){
+      ajax({
+        url:webHost+"?user/view/options",
+        dataType:"json",
+        success:function(res){
+          if(!res.code){
+            return;
+          }
+          var username = res.data.user.info.name;
+          fn(username);
+        }
+      });
+    }
+    function getFileUrl(fn){
       var infoData = "dataArr="+encodeURIComponent('[{"path":"'+path+'"}]')+"&CSRF_TOKEN="+encodeURIComponent(getCookie("CSRF_TOKEN"))+"&API_ROUTE="+encodeURIComponent("explorer/index/pathInfo");
       ajax({
-        url:infoUrl,
+        url:webHost+"?explorer/index/pathInfo",
         contentType:"application/x-www-form-urlencoded; charset=UTF-8",
         dataType:"json",
         type:"POST",
@@ -102,24 +115,29 @@
             return;
           }
           var gameUrl = res.data.downloadPath;
-          window.location.href = ajaxHost+"/mgame.php?url="+encodeURIComponent(gameUrl+"#/"+name)+"&fext="+encodeURIComponent(ext)+"&userId="+encodeURIComponent(userId)+"&ajaxHost="+encodeURIComponent(ajaxHost);
+          fn(gameUrl);
         }
       });
     }
+    function actionUrl(userId){
+      getFileUrl(function (gameUrl){
+        window.location.href = ajaxHost+"/mgame.php?url="+encodeURIComponent(gameUrl+"#/"+name)+"&fext="+encodeURIComponent(ext)+"&userId="+encodeURIComponent(userId)+"&ajaxHost="+encodeURIComponent(ajaxHost);
+      });
+    }
     function init(){
-      var kodUserID = getCookie("kodUserID");
-      var host = window.location.host;
-      var data = {"username":host+kodUserID,"password":"123456"};
-      regUser(data,function (res){
-        if(res){
-          actionUrl(res.id);
-        }else{
-          logUser(data,function (res2){
-            if(res2){
-              actionUrl(res2.id);
-            }
-          });
-        }
+      getUserName(function(username){
+        var data = {"username":username,"password":"123456"};
+        regUser(data,function (res){
+          if(res){
+            actionUrl(res.id);
+          }else{
+            logUser(data,function (res2){
+              if(res2){
+                actionUrl(res2.id);
+              }
+            });
+          }
+        });
       });
     }
     init();

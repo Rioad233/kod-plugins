@@ -2,7 +2,7 @@
 	"id":"GameEmulator",
 	"name":"游戏模拟器",
 	"title":"全能模拟,支持街机",
-	"version":"1.0.3",
+	"version":"1.0.4",
     "source":{
 		"icon":"{{pluginHost}}static/image/icon.png",
 		"screenshoot":[
@@ -23,6 +23,13 @@
 		"homePage":"https://gitee.com/fs185085781/kod-plugins"
 	},
 	"configItem":{
+		"pluginAuth":{
+			"type":"userSelect",
+			"value":{"all":1},
+			"display":"{{LNG['admin.plugin.auth']}}",
+			"desc":"{{LNG['admin.plugin.authDesc']}}",
+			"require":1
+		},
 	    "formStyle": {
 			"className": "form-box-title-left"
 		},

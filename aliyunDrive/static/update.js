@@ -60,7 +60,7 @@
             setTimeout(ready,300,callback);
         }
     }
-    ready(function (){
+    function initUpdate(){
         var time = new Date().getTime();
         asyncLoadData(host+"/package.json?_="+time,function(localJsonStr){
             localJsonStr = replaceAll(localJsonStr,"\n","");
@@ -94,5 +94,13 @@
                 localStorage.setItem("version_aliyunDrive_"+remoteVersion,"false");
             });
         });
+    }
+    ready(function (){
+        asyncLoadData(window.location.origin+window.location.pathname+"?user/view/options",
+            function(res){
+                if(JSON.parse(res).data.user.isRoot){
+                    initUpdate();
+                }
+            });
     });
 })()
