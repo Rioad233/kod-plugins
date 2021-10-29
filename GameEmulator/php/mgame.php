@@ -1,6 +1,6 @@
 <?php
-$webHost = "https://static.tenfell.cn/kodbox/GameEmulatorWeb";
-$handle = fopen($webHost."/mgame.html", "rb");
+$webHost = "//static.tenfell.cn/kodbox/GameEmulatorWeb";
+$handle = fopen("http:".$webHost."/mgame.html", "rb");
 $contents = "";
 do {
     $data = fread($handle, 8192);
@@ -11,5 +11,5 @@ do {
 } while(true);
 fclose ($handle);
 $source = "./asserts/js/init.js";
-$target = $webHost."/asserts/js/init.js";
+$target = "https:".$webHost."/asserts/js/init.js";
 echo str_replace($source,$target,$contents);
