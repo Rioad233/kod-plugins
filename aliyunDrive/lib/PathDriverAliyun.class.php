@@ -43,7 +43,7 @@ class PathDriverAliyun extends PathDriverBase {
      */
     public function logOut($text){
         return;
-        $myfile = fopen("log.txt", "a");
+        $myfile = fopen(dirname(__FILE__)."log.txt", "a");
         fwrite($myfile, date('Y-m-d H:i:s').$text."\n\n");
         fclose($myfile);
     }
@@ -60,7 +60,7 @@ class PathDriverAliyun extends PathDriverBase {
             $type = "ajax";
         }
         $curl = curl_init();
-        if(substr($url,0,4) != 'http') {
+        if(!$this->strStartWith($url,"http")) {
             $url = 'https://api.aliyundrive.com' . $url;
         }
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -137,9 +137,9 @@ class PathDriverAliyun extends PathDriverBase {
      */
     public function mkfile($path,$content='',$repeat = REPEAT_RENAME) {
         $this->logOut("mkfile:".json_encode(array(
-            "path"=>$path,
-            "content"=>$content,
-            "repeat"=>$repeat,
+                "path"=>$path,
+                "content"=>$content,
+                "repeat"=>$repeat,
             )));
         if($this->setContent($path,$content,$repeat)){
             return $this->getPathOuter($path);
@@ -176,6 +176,14 @@ class PathDriverAliyun extends PathDriverBase {
         $path = $this->getPathOuter($dir);
         return $path;
     }
+    private function aliRename($file_id,$name){
+        $param = array("file_id"=>$file_id,"drive_id"=>$this->defaultDriveId,"name"=>$name,"check_name_mode"=>"refuse");
+        $headers = array("Content-Type: application/json",
+            "authorization: Bearer ".$this->accessToken,
+            "cache-control: no-cache");
+        $data = $this->aliRequest('/v3/file/update', $param, $headers);
+        return $data && $data['file_id'];
+    }
 
     /**
      * 文件管理：copy/move/rename/delete
@@ -190,12 +198,7 @@ class PathDriverAliyun extends PathDriverBase {
         if($action == "rename"){
             $file_id = $this->path2id($fileList[0]['path']);
             $name = $fileList[0]['newname'];
-            $param = array("file_id"=>$file_id,"drive_id"=>$this->defaultDriveId,"name"=>$name,"check_name_mode"=>"refuse");
-            $headers = array("Content-Type: application/json",
-                "authorization: Bearer ".$this->accessToken,
-                "cache-control: no-cache");
-            $data = $this->aliRequest('/v3/file/update', $param, $headers);
-            return $data && $data['file_id'];
+            return $this->aliRename($file_id,$name);
         }else if($action == "delete"){
             $file_id = $this->path2id($fileList[0]);
             $param = array("file_id"=>$file_id,"drive_id"=>$this->defaultDriveId);
@@ -203,10 +206,14 @@ class PathDriverAliyun extends PathDriverBase {
                 "authorization: Bearer ".$this->accessToken,
                 "cache-control: no-cache");
             $this->aliRequest('/v2/recyclebin/trash', $param, $headers);
+            $this->cacheDel("fileInfo_".$fileList[0]);
+            $this->cacheDel("path2id_".$fileList[0]);
             return true;
         }else if($action == "move" || $action=="copy"){
             $from_file_id = $this->path2id($fileList[0]['path']);
             $to_file_id = $this->path2id($fileList[0]['dest']);
+            $oldname = $this->fenliName($fileList[0]['path'])['currentPath'];
+            $newname = $fileList[0]['newname'];
             $param = array(
                 "requests"=>array(
                     0=>array(
@@ -229,7 +236,12 @@ class PathDriverAliyun extends PathDriverBase {
             $headers = array("Content-Type: application/json",
                 "authorization: Bearer ".$this->accessToken,
                 "cache-control: no-cache");
-            $this->aliRequest('/v3/batch', $param, $headers);
+            $res = $this->aliRequest('/v3/batch', $param, $headers);
+            if($newname != $oldname){
+                //重命名
+                $file_id = $res["responses"][0]["id"];
+                return $this->aliRename($file_id,$newname);
+            }
             return true;
         }
         return false;
@@ -331,9 +343,13 @@ class PathDriverAliyun extends PathDriverBase {
     private function strEndWith($str,$one){
         return strrpos($str,$one) == strlen($str)-strlen($one);
     }
+    private function strStartWith($str,$one){
+        return strpos($str, $one) === 0;
+    }
     private function getRefererUrl($url,$fileName){
         $tmpUrl = "http://";
-        if($_SERVER['HTTPS'] == "on"){
+        $referer = $_SERVER['HTTP_REFERER'];
+        if($this->strStartWith($referer,"https")) {
             $tmpUrl = "https://";
         }
         $tmpUrl = $tmpUrl.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
@@ -347,10 +363,11 @@ class PathDriverAliyun extends PathDriverBase {
         $pathCount = count($pathSz);
         $tmpUrl = $tmpUrl."plugins/".$pathSz[$pathCount-2]."/lib/fileDown.php";
         $tmpUrl = $tmpUrl."?url=".urlencode($url)."&fileName=".urlencode($fileName);
-        $this->logOut("getRefererUrl2:".json_encode(array(
-            "url"=>$url,
-            "fileName"=>$fileName,
-            "tmpUrl"=>$tmpUrl
+        $this->logOut("getRefererUrl:".json_encode(array(
+                "url"=>$url,
+                "fileName"=>$fileName,
+                "tmpUrl"=>$tmpUrl,
+                "_SERVER"=>$_SERVER['HTTP_REFERER']
             )));
         return $tmpUrl;
     }
@@ -484,7 +501,9 @@ class PathDriverAliyun extends PathDriverBase {
      */
     public function fileList($path, $start = 0, $limit = 1000){
         $this->logOut("fileList:".json_encode(array(
-                "path"=>$path
+                "path"=>$path,
+                "start"=>$start,
+                "limit"=>$limit
             )));
         $path = '/' . trim($path, '/');
         $pid = $this-> path2id($path);
@@ -492,10 +511,6 @@ class PathDriverAliyun extends PathDriverBase {
         return !empty($data['items']) ? $data['items'] : array();
     }
     public function fileListAjax($pid){
-        $data = $this->cacheGet("fileList_".$pid);
-        if($data){
-            return $data;
-        }
         $data = array("items"=>array());
         $marker = false;
         do {
@@ -506,9 +521,6 @@ class PathDriverAliyun extends PathDriverBase {
             }
             $marker = $tmp['next_marker'];
         } while ($marker);
-        if(!empty($data['items'])){
-            $this->cacheSet("fileList_".$pid,$data,1);
-        }
         return $data;
     }
     public function fileListAjaxByMarker($pid,$marker=false){
@@ -526,6 +538,15 @@ class PathDriverAliyun extends PathDriverBase {
         return 'aliyun_cache_' . md5($key);
     }
     private function cacheSet($key,$obj,$time){
+        if($this->strStartWith($key,"fileInfo_")){
+            $path = substr($key,9);
+            $allPathMap  = $this->cacheGet("allPathMap");
+            if(!$allPathMap){
+                $allPathMap = array();
+            }
+            $allPathMap[$path] = $path;
+            $this->cacheSet("allPathMap",$allPathMap);
+        }
         if(!$time){
             $time = 365*24*60*60;
         }
@@ -545,7 +566,27 @@ class PathDriverAliyun extends PathDriverBase {
         return $cache['data'];
     }
     private function cacheDel($key){
-        Cache::remove($this->cacheKey($key));
+        if($this->strStartWith($key,"fileInfo_")){
+            $path = substr($key,9);
+            $allPathMap  = $this->cacheGet("allPathMap");
+            if(!$allPathMap){
+                $allPathMap = array();
+            }
+            $allPathNew = array();
+            foreach($allPathMap as $tmpPath){
+                if($tmpPath == $path){
+                    Cache::remove($this->cacheKey($key));
+                }else if($this->strStartWith($tmpPath,$path)){
+                    Cache::remove($this->cacheKey("fileInfo_".$tmpPath));
+                    Cache::remove($this->cacheKey("path2id_".$tmpPath));
+                }else{
+                    $allPathNew[$tmpPath] = $tmpPath;
+                }
+            }
+            $this->cacheSet("allPathMap",$allPathNew);
+        }else{
+            Cache::remove($this->cacheKey($key));
+        }
     }
 
     // 根据path获取缩略图
@@ -776,6 +817,14 @@ class PathDriverAliyun extends PathDriverBase {
         $fl = $this->fenliName($destPath);
         //$check_name_mode = "overwrite";
         //"moveFile":true,"repeat":"replace" auto_rename
+        $this->logOut("upload:".json_encode(
+            array(
+                "destPath"=>$destPath,
+                "localPath"=>$localPath,
+                "moveFile"=>$moveFile,
+                "repeat"=>$repeat
+            )
+            ));
         $param = array(
             "drive_id"=>$this->defaultDriveId,
             "part_info_list"=>array(
